@@ -1,9 +1,71 @@
 @import "tailwindcss";
+/* @import url('https://fonts.googleapis.com/css2?family=Gluten:wght@100..900&family=Plaster&family=Stalinist+One&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
+ */
 
 body{
-    background-color: rgb(37, 37, 37)
+    background-color: rgb(10, 10, 10)
 }
 
+@font-face {
+    font-family:nintendo-nes-font;
+    src: url("./assets/images/nintendo-nes-font.ttf") format("truetype");
+}
+.xyz {
+    font-family: nintendo-nes-font;
+    letter-spacing: 4px;
+    background-color: #1a1a1a; /* Dark background */
+    color: #fff; /* White text */
+    padding: 4vw; /* Using relative units for padding */
+    border-radius: 10px;
+    border: 3px solid #4c4c4c; /* Red border */
+    width: 80%; /* Makes the width responsive */
+    max-width: 800px; /* Max width for larger screens */
+    margin: 20px auto; /* Centers the div */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(199, 40, 40, 0.1); /* Shadow effect */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+    line-height: 1.6; /* Adds spacing between lines */
+}
+
+/* For smaller screens, like mobile */
+@media (max-width: 600px) {
+    .xyz {
+        padding: 5vw;
+        font-size: 4vw; /* Adjust font size based on screen width */
+        width: 90%; /* Slightly larger width for small screens */
+    }
+}
+
+/* For medium screens, like tablets */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .xyz {
+        padding: 3vw;
+        font-size: 3vw;
+    }
+}
+
+/* For large screens */
+@media (min-width: 1025px) {
+    .xyz {
+        padding: 2vw;
+        font-size: 2vw;
+    }
+}
+
+
+
+
+
+
+/* .xyz {
+    font-family: "Gluten", cursive;
+    font-optical-sizing: auto;
+    font-weight: weight;
+    font-style: normal;
+    font-variation-settings:
+      "slnt" 0;
+      font-size: 40px;
+  } */
 /* .img{
    z-index: -100;
 } */

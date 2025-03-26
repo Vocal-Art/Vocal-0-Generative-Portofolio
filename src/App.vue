@@ -2,9 +2,7 @@
 <script setup>
 import { RouterView } from 'vue-router';
 import Navbar from './components/Navbar.vue';
-
 </script>
-
 
 
 <template>
@@ -13,7 +11,8 @@ import Navbar from './components/Navbar.vue';
   </div>
   
     <RouterView />
-  </template>
+
+</template>
 
 
 

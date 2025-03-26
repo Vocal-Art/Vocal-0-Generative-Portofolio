@@ -1,59 +1,18 @@
+
+//! Réservez main.js à la configuration principale de Vue.js
+
 import { createApp } from "vue";
-import "./style.css";
 import App from "./App.vue";
-import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "./views/HomeView.vue";
-import AboutView from "./views/AboutView.vue";
-import Gallery from "./components/Gallery.vue";
-import Links from "./components/Links.vue";
-import Faq from "./components/Faq.vue";
-import Test from "./components/Test.vue";
+import router from "./router"; // Importer le routeur
+import "./style.css"; // Importer les styles globaux
 
-//  createApp(App).mount('#app')
-
+// Créer l'application Vue
 const app = createApp(App);
-const router = createRouter({
-  history: createWebHistory(),
-  // (import.meta.env.Base_URL),
-  routes: [
-    {
-      path: "/",
-      name: "home",
-      component: HomeView,
-    },
-    {
-      path: "/about",
-      name: "about",
-      component: AboutView,
-    },
 
-    {
-      path: "/gallery",
-      name: "gallery",
-      component: Gallery,
-      },
-    
-      {
-        path: "/links",
-        name: "links",
-        component: Links,
-      },
-
-      {
-        path: "/faq",
-        name: "faq",
-        component: Faq,
-      },
-
-      {
-        path: "/test",
-        name: "test",
-        component: Test,
-      },
-  ],
-});
-
+// Utiliser le routeur
 app.use(router);
+
+// Monter l'application sur l'élément HTML avec l'id "app"
 app.mount("#app");
 
-export default router;
+
