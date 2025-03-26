@@ -172,18 +172,18 @@ html, body {
 
 }
 
-.counter-text {
+/* .counter-text {
   font-family: 'Roboto', sans-serif;
-  color: #fff; /* White text */
+  color: #fff; 
   text-align: center;
-  background-color: rgba(216, 216, 216, 0.6); /* Semi-transparent background */
+  background-color: rgba(216, 216, 216, 0.6); 
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Shadow effect */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   padding: 16px;
   max-width: 80%;
   width: fit-content;
   transition: all 0.3s ease-in-out;
-}
+} */
 
 .counter-text:hover {
   background-color: rgba(0, 0, 0, 0.8);

@@ -36,22 +36,22 @@
       
     
       
-      <button @click="toggleShapes" class="toggle-shapes-button absolute mt-4 top-0 left-1/2 transform -translate-x-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-blue-600 z-10">
+      <button @click="toggleShapes" class="toggle-shapes-button absolute mt-4 top-0 left-1/2 transform -translate-x-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 px-4 py-2 bg-black text-white rounded-md hover:bg-blue-600 z-10">
         Toggle Shapes
       </button>
 
       <div class="flex flex-row ">
-        <div class="controls absolute bottom-4 left-5 flex flex-col items-start gap-4 z-10">
+        <div class="controls absolute bottom-4 left-5 flex flex-col items-start gap-4 z-10 ">
         <label class="text-white">Shape Size</label>
-        <input type="range" v-model="shapeSize" min="10" max="150" class="slider w-40" />
+        <input type="range" v-model="shapeSize" min="10" max="150" class="slider w-40 " />
         <span class="text-white">{{ shapeSize }}</span>
       </div>
 
       <!-- Capture Screenshot Button -->
-      <button @click="captureScreenshot" class="mt-140 ml-64 px-5 py-6 bg-blue-500 text-white rounded-md hover:bg-blue-600 lg:mt-290 ">Capture</button>
+      <!-- <button @click="captureScreenshot" class="mt-140 ml-64 px-5 py-6 bg-blue-500 text-white rounded-md hover:bg-blue-600 lg:mt-290 ">Capture</button> -->
 
       <!-- Close Button -->
-      <button @click="closeModal" class="px-8 py-5 bg-red-800 text-white rounded-md hover:bg-red-600 absolute bottom-10 right-4">
+      <button @click="closeModal" class="px-8 py-5 bg-black text-white rounded-md hover:bg-red-600 absolute bottom-10 right-4">
         Close
       </button>
 

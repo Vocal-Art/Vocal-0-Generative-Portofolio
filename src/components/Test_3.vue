@@ -11,7 +11,7 @@
     <div v-if="isModalOpen" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-80 z-50 overflow-hidden max-h-screen">
       <!-- Description -->
       <p v-if="!isDrawing" class="text-white text-1xl font-serif mb-4 absolute top-4 p-5 mx-auto text-center sm:text-left sm:justify-between sm:max-w-3xl sm:w-full bg-green-500 w-[350px]">
-        This canvas displays a dynamic animation effect with particles that follow the position of the mouse or touch points placed over the screen surface.<br>
+        Touch points placing them over the screen surface or follow the position of the mouse. <br> This canvas displays a dynamic animation effect with particles .<br>
         The position, size, and number of particles change randomly over time.
       </p> 
 

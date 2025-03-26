@@ -115,7 +115,8 @@ export default {
       this.canvas.height = window.innerHeight;
       this.setupTree();
     },
-    setupTree() {
+
+  setupTree() {
   this.counter = 0;
   this.counter2 = 0;
   
@@ -123,7 +124,7 @@ export default {
   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // Clear canvas, making it transparent
   
   this.ctx.strokeStyle = "rgb(10, 0, 100)";
-  this.trunkLength = 200;  // Fixed trunk length
+  this.trunkLength = 100;  // Fixed trunk length
   this.trunkRadius = 26;   // Fixed trunk radius
   this.trunk();
 }

@@ -13,16 +13,16 @@ body{
 .xyz {
     font-family: nintendo-nes-font;
     letter-spacing: 4px;
-    background-color: #1a1a1a; /* Dark background */
+  
     color: #fff; /* White text */
     padding: 4vw; /* Using relative units for padding */
-    border-radius: 10px;
-    border: 3px solid #4c4c4c; /* Red border */
+   
+
     width: 80%; /* Makes the width responsive */
     max-width: 800px; /* Max width for larger screens */
     margin: 20px auto; /* Centers the div */
     text-align: center;
-    box-shadow: 0 4px 8px rgba(199, 40, 40, 0.1); /* Shadow effect */
+    
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
     line-height: 1.6; /* Adds spacing between lines */
 }
