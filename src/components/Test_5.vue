@@ -10,7 +10,7 @@
     <div v-if="isModalOpen" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-80 z-50">
       
       <!-- Description -->
-      <p v-if="!isGenerating && !generationCompleted" class="text-white text-2xl font-serif mb-4 absolute top-4 p-5 mx-auto text-center sm:text-left sm:justify-between sm:max-w-3xl sm:w-full bg-green-500 w-[450px] sm:w-[650px] p-5 mx-auto">
+      <p v-if="!isGenerating && !generationCompleted" class="text-white text-1xl font-serif mb-4 absolute top-4 p-5 mx-auto text-center sm:text-left sm:justify-between sm:max-w-3xl sm:w-full bg-green-500 w-[350px]">
         So, let's see how primes appear in a spiral shape.<br>
         A prime spiral starts in the middle of a grid and moves in a spiral pattern (right, up, left, down).<br>
         Prime numbers are 2, 3, 5, 7, etc.<br>

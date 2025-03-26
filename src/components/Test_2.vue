@@ -10,11 +10,11 @@
     <!-- Modal -->
     <div v-if="isModalOpen" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-80 z-50">
       
-      <p v-if="!isDrawing" class="text-white text-2xl font-serif mb-4 absolute top-4 p-5 mx-auto text-center sm:text-left sm:justify-between sm:max-w-3xl sm:w-full bg-green-500 w-[450px] sm:w-[650px] p-5 mx-auto">
+      <p v-if="!isDrawing" class="text-white text-1xl font-serif mb-4 absolute top-4 p-5 mx-auto text-center sm:text-left sm:justify-between sm:max-w-3xl sm:w-full bg-green-500 w-[350px]  ">
         The effect of the tool creates dynamic, rotating, multi-point star-like shapes that appear wherever the user moves the mouse or touches the screen.<br>
         As the user interacts, the shapes are drawn in layers, with each new shape slightly rotating, creating a fluid, spiraling, and overlapping visual noisy effect.<br>
-        The shapes are drawn in a muted white color and have a soft shadow effect that makes them stand out against the dark background.<br>
-        The "difference" blend mode gives the overlapping shapes a unique contrast, producing a scribbling or trail-like visual, where older shapes interact with newer ones in an eye-catching way.<br>
+       
+       <br>
         This tool, is inspired by a digital artist Frank Laboratory.
       </p>
 

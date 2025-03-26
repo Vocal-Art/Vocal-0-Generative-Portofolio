@@ -30,7 +30,7 @@
 
     <!-- Modal -->
     <div v-if="isModalOpen" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-80 z-50">
-      <p v-if="!isDrawing" class="text-white text-2xl font-serif mb-4 absolute top-4 p-5 mx-auto text-center sm:text-left sm:justify-between sm:max-w-3xl sm:w-full bg-green-500 w-[450px] sm:w-[650px] p-5 mx-auto">
+      <p v-if="!isDrawing" class="text-white text-1xl font-serif mb-4 absolute top-4 p-5 mx-auto text-center sm:text-left sm:justify-between sm:max-w-3xl sm:w-full bg-green-500 w-[350px] ">
         This canvas is a trail of 4 branched star-shaped form in HSL color.<br>
         The form appears by moving the finger or the mouse fluidly over the screen.<br>
         With each move a new star shape is drawn at the cursor's position.<br>
