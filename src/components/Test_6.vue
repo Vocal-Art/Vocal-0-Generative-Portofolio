@@ -56,94 +56,125 @@ export default {
     };
   },
   methods: {
-    openModal() {
-      this.isModalOpen = true;
-      document.body.style.overflow = 'hidden'; // Disable scrolling
-      this.sprite.src = 'planets2.png';
-    },
-    closeModal() {
-      this.isModalOpen = false;
-      document.body.style.overflow = ''; // Restore scrolling
-      this.cleanupCanvas();
-    },
-    startDrawing() {
-      this.isDrawing = true;
-      this.$nextTick(() => {
-        this.setupCanvas();
-      });
-    },
-    clearCanvas() {
-      this.resetState();
+  // Ouvre le modal
+  openModal() {
+    this.isModalOpen = true;
+    document.body.style.overflow = 'hidden'; // Désactive le défilement
+    this.sprite.src = 'planets2.png';
+  },
+  
+  // Ferme le modal
+  closeModal() {
+    this.isModalOpen = false;
+    document.body.style.overflow = ''; // Restaure le défilement
+    this.cleanupCanvas();
+  },
+  
+  // Commence le dessin
+  startDrawing() {
+    this.isDrawing = true;
+    this.$nextTick(() => {
       this.setupCanvas();
-    },
-    resetState() {
-      this.particles = [];
-      this.mouse.x = null;
-      this.mouse.y = null;
-    },
-    setupCanvas() {
-      this.$nextTick(() => {
-        this.canvas = this.$refs.canvas;
-        if (this.canvas) {
-          this.ctx = this.canvas.getContext('2d');
-          this.canvas.width = window.innerWidth;
-          this.canvas.height = window.innerHeight;
-
-          window.addEventListener('mousemove', this.handleMouseMove);
-          window.addEventListener('touchstart', this.handleTouchMove);
-          window.addEventListener('touchmove', this.handleTouchMove);
-          window.addEventListener('touchend', this.handleTouchEnd);
-
-          this.animate();
-        }
-      });
-    },
-    handleMouseMove(event) {
-      this.mouse.x = event.x;
-      this.mouse.y = event.y;
-      if (this.isDrawing) {
-        this.addParticle(event.x, event.y);
-      }
-    },
-    handleTouchMove(event) {
-      event.preventDefault(); // Prevent scrolling on touch move
-      const touch = event.touches[0];
-      this.mouse.x = touch.clientX;
-      this.mouse.y = touch.clientY;
-      if (this.isDrawing) {
-        this.addParticle(this.mouse.x, this.mouse.y);
-      }
-    },
-    handleTouchEnd(event) {},
-    addParticle(x, y) {
-      let particle = new Particle(x, y, this.ctx, this.sprite);
-      particle.radius *= 1.5;
-      this.particles.push(particle);
-    },
-    animate() {
-      if (this.isDrawing) {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.particles.forEach((p) => p.draw());
-        requestAnimationFrame(this.animate);
-      }
-    },
-    cleanupCanvas() {
-      window.removeEventListener('mousemove', this.handleMouseMove);
-      window.removeEventListener('touchstart', this.handleTouchMove);
-      window.removeEventListener('touchmove', this.handleTouchMove);
-      window.removeEventListener('touchend', this.handleTouchEnd);
-    },
-    captureScreenshot() {
-      const canvas = this.$refs.canvas;
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/png');
-      link.download = 'screenshot.png';
-      link.click();
-    },
+    });
   },
-  mounted() {
-    this.sprite.onload = () => this.setupCanvas();
+  
+  // Efface le canvas
+  clearCanvas() {
+    this.resetState();
+    this.setupCanvas();
   },
+  
+  // Réinitialise l'état
+  resetState() {
+    this.particles = [];
+    this.mouse.x = null;
+    this.mouse.y = null;
+  },
+  
+  // Configure le canvas
+  setupCanvas() {
+    this.$nextTick(() => {
+      this.canvas = this.$refs.canvas;
+      if (this.canvas) {
+        this.ctx = this.canvas.getContext('2d');
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+
+        window.addEventListener('mousemove', this.handleMouseMove);
+        window.addEventListener('touchstart', this.handleTouchMove);
+        window.addEventListener('touchmove', this.handleTouchMove);
+        window.addEventListener('touchend', this.handleTouchEnd);
+
+        this.animate();
+      }
+    });
+  },
+
+  // Gère le mouvement de la souris
+  handleMouseMove(event) {
+    this.mouse.x = event.x;
+    this.mouse.y = event.y;
+    if (this.isDrawing) {
+      this.addParticle(event.x, event.y, true);  // true indique qu'on clique
+    }
+  },
+  
+  // Gère le mouvement tactile
+  handleTouchMove(event) {
+    event.preventDefault(); // Empêche le défilement lors du déplacement tactile
+    const touch = event.touches[0];
+    this.mouse.x = touch.clientX;
+    this.mouse.y = touch.clientY;
+    if (this.isDrawing) {
+      this.addParticle(this.mouse.x, this.mouse.y, true);  // true pour indiquer interaction tactile
+    }
+  },
+  
+  handleTouchEnd(event) {},
+  
+  // Ajoute une particule (planète)
+  addParticle(x, y, isInteracting = false) {
+    let particle = new Particle(x, y, this.ctx, this.sprite);
+    
+    // Si une interaction (clic ou touché) se produit, augmente la taille de la planète
+    if (isInteracting) {
+      particle.radius *= 5;  // Double la taille de la planète
+    }
+
+    this.particles.push(particle);
+  },
+
+  // Animation des particules
+  animate() {
+    if (this.isDrawing) {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.particles.forEach((p) => p.draw());
+      requestAnimationFrame(this.animate);
+    }
+  },
+
+  // Nettoie les écouteurs d'événements
+  cleanupCanvas() {
+    window.removeEventListener('mousemove', this.handleMouseMove);
+    window.removeEventListener('touchstart', this.handleTouchMove);
+    window.removeEventListener('touchmove', this.handleTouchMove);
+    window.removeEventListener('touchend', this.handleTouchEnd);
+  },
+
+  // Capture une capture d'écran
+  captureScreenshot() {
+    const canvas = this.$refs.canvas;
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = 'screenshot.png';
+    link.click();
+  },
+},
+
+mounted() {
+  this.sprite.onload = () => this.setupCanvas();
+},
+
 };
 
 // Particle class

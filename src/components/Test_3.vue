@@ -47,27 +47,27 @@
 export default {
   data() {
     return {
-      isModalOpen: false,  
-      isDrawing: false,    
-      particleArray: [],   
-      mouse: { x: null, y: null }, 
-      maxSize: 40,
-      minSize: 0,
-      mouseRadius: 60
+      isModalOpen: false,
+      isDrawing: false,
+      particleArray: [],
+      touch: { x: null, y: null },
+      maxSize: 60,
+      minSize: 5,
+      touchRadius: 80
     };
   },
 
   methods: {
     openModal() {
       this.isModalOpen = true;
-      document.body.style.overflow = 'hidden'; // Disable page scrolling
+      document.body.style.overflow = 'hidden';
     },
 
     closeModal() {
       this.isModalOpen = false;
       this.isDrawing = false;
       this.cleanupCanvas();
-      document.body.style.overflow = ''; // Restore scrolling
+      document.body.style.overflow = '';
     },
 
     startDrawing() {
@@ -78,17 +78,20 @@ export default {
     },
 
     clearCanvas() {
-      const canvas = this.$refs.canvas;
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      this.particleArray = [];
-      this.setupCanvas();
-    },
+  const canvas = this.$refs.canvas;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);  // Effacer tout le contenu du canvas
+  
+  // Vider le tableau de particules
+  this.particleArray = [];
+  
+  // Réinitialiser l'animation et recréer les particules
+  this.setupCanvas();
+},
 
     captureScreenshot() {
       const canvas = this.$refs.canvas;
       const dataURL = canvas.toDataURL("image/png");
-
       const link = document.createElement('a');
       link.href = dataURL;
       link.download = 'screenshot.png';
@@ -98,112 +101,77 @@ export default {
     setupCanvas() {
       const canvas = this.$refs.canvas;
       const ctx = canvas.getContext('2d');
-      ctx.canvas.width = window.innerWidth;
-      ctx.canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
-      let particleArray = [];
-      const colours = ['white'];
-
-      const maxSize = this.maxSize;
-      const minSize = this.minSize;
-      const mouseRadius = this.mouseRadius;
-
-      let mouse = { x: null, y: null };
-
-      function Particle(x, y, directionX, directionY, size, colour) {
+      let particleArray = this.particleArray;
+      const colors = ['white', 'blue', 'red', 'yellow'];
+      
+      function Particle(x, y, directionX, directionY, size, color) {
         this.x = x;
         this.y = y;
         this.directionX = directionX;
         this.directionY = directionY;
         this.size = size;
-        this.colour = colour;
+        this.color = color;
       }
 
       Particle.prototype.draw = function() {
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-        ctx.fillStyle = 'black';
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
         ctx.fill();
-        ctx.strokeStyle = 'white';
-        ctx.stroke();
       };
 
       Particle.prototype.update = function() {
-        if (this.x + this.size * 2 > canvas.width || this.x - this.size * 2 < 0) {
-          this.directionX = -this.directionX;
-        }
-        if (this.y + this.size * 2 > canvas.height || this.y - this.size * 2 < 0) {
-          this.directionY = -this.directionY;
-        }
         this.x += this.directionX;
         this.y += this.directionY;
-
-        if (
-          mouse.x - this.x < mouseRadius &&
-          mouse.x - this.x > -mouseRadius &&
-          mouse.y - this.y < mouseRadius &&
-          mouse.y - this.y > -mouseRadius
-        ) {
-          if (this.size < maxSize) {
-            this.size += 10;
-          }
-        } else if (this.size > minSize) {
-          this.size -= 0.01;
-        }
-        if (this.size < 0) {
-          this.size = 0;
-        }
+        if (this.size < 60) this.size += 0.2;
         this.draw();
       };
 
-      const initParticles = () => {
-        particleArray = [];
-        for (let i = 0; i < 1000; i++) {
-          let size = 0;
-          let x = Math.random() * (innerWidth - size * 2) - size * 2;
-          let y = Math.random() * (innerHeight - size * 2) - size * 2;
-          let directionX = Math.random() * 0.2 - 0.1;
-          let directionY = Math.random() * 0.2 - 0.1;
-          let colour = colours[Math.floor(Math.random() * colours.length)];
-          particleArray.push(new Particle(x, y, directionX, directionY, size, colour));
+      const createParticles = (x, y) => {
+        for (let i = 0; i < 5; i++) {
+          let size = Math.random() * 10 + 10;
+          let directionX = (Math.random() - 0.5) * 2;
+          let directionY = (Math.random() - 0.5) * 2;
+          let color = colors[Math.floor(Math.random() * colors.length)];
+          particleArray.push(new Particle(x, y, directionX, directionY, size, color));
         }
       };
 
       const animate = () => {
         requestAnimationFrame(animate);
-        ctx.clearRect(0, 0, innerWidth, innerHeight);
-        for (let i = 0; i < particleArray.length; i++) {
-          particleArray[i].update();
-        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particleArray.forEach((particle) => {
+          particle.update();
+        });
       };
 
-      initParticles();
       animate();
-
-      window.addEventListener('mousemove', (e) => {
-        mouse.x = e.x;
-        mouse.y = e.y;
+      
+      canvas.addEventListener('mousemove', (e) => {
+        createParticles(e.x, e.y);
       });
-
-      window.addEventListener('resize', () => {
-        canvas.width = innerWidth;
-        canvas.height = innerHeight;
-        initParticles();
+      
+      canvas.addEventListener('touchstart', (e) => {
+        let touch = e.touches[0];
+        createParticles(touch.clientX, touch.clientY);
+      });
+      
+      canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        let touch = e.touches[0];
+        createParticles(touch.clientX, touch.clientY);
       });
     },
 
     cleanupCanvas() {
-      window.removeEventListener('mousemove', this.handleMouseMove);
-      window.removeEventListener('resize', this.handleResize);
+      const canvas = this.$refs.canvas;
+      canvas.removeEventListener('mousemove', this.createParticles);
+      canvas.removeEventListener('touchstart', this.createParticles);
+      canvas.removeEventListener('touchmove', this.createParticles);
     }
   }
 };
 </script>
-
-<style scoped>
-canvas {
-  max-width: 100vw;
-  max-height: 100vh;
-  display: block;
-}
-</style>

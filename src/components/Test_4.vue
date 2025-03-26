@@ -28,12 +28,7 @@
         <canvas ref="canvas" id="canvas4" class="w-full h-full" style="background: transparent; border: none;"></canvas>
 
         <!-- Bottom button to clear canvas, capture image, and close modal (only appear after generation starts) -->
-        <div v-if="isGenerating" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4">
-          <!-- Clear Button -->
-          <button @click="clearCanvas" class="px-8 py-4 bg-yellow-500 text-white rounded-md hover:bg-red-600">
-            Clear
-          </button>
-
+        <div v-if="isGenerating" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4 justify-center items-center w-full">
           <!-- Capture Button -->
           <button @click="captureCanvas" class="px-8 py-4 bg-blue-500 text-white rounded-md hover:bg-blue-600">
             Capture
@@ -55,28 +50,29 @@
 export default {
   data() {
     return {
-      isModalOpen: false,  // To control modal visibility
-      isGenerating: false, // To control if the generation is in progress
-      generationCompleted: false,  // Flag to track if generation is done
+      isModalOpen: false,  // Contrôle de la visibilité du modal
+      isGenerating: false, // Contrôle si la génération est en cours
+      generationCompleted: false, // Indicateur si la génération est terminée
       counter: 0,
       counter2: 0,
       xg: 58,
       yg: 46,
-      trunkSegments: 7,   // Fixed trunk segments
+      trunkSegments: 7, // Segment fixe du tronc
       nodeLimit: 20000,
       pts: new Array(20000),
       branchLimit: 620,
-      trunkLength: 200,   // Fixed trunk length
-      lean2: new Array(8).fill(0), // Trunk lean
-      trunkRadius: 26,    // Fixed trunk radius
+      trunkLength: 200, // Longueur du tronc fixe
+      lean2: new Array(8).fill(0), // Inclinaison du tronc
+      trunkRadius: 26, // Rayon du tronc fixe
       canvas: null,
       ctx: null,
+      treeProperties: {} // Nouveau champ pour stocker les caractéristiques de l'arbre
     };
   },
   methods: {
     openModal() {
       this.isModalOpen = true;
-      this.resetState();  // Reset state when opening the modal
+      this.resetState();  // Réinitialiser l'état lors de l'ouverture du modal
     },
     closeModal() {
       this.isModalOpen = false;
@@ -85,22 +81,23 @@ export default {
     startGeneration() {
       if (!this.generationCompleted) {
         this.isGenerating = true;
-        this.setupCanvas();  // Start the tree generation
-        this.generationCompleted = true;  // Mark the generation as completed
+        this.setupCanvas();  // Commencer la génération de l'arbre
+        this.generationCompleted = true;  // Marquer la génération comme terminée
       }
     },
     resetState() {
-      // Reset the state of the generation to allow a fresh start
+      // Réinitialise l'état de génération
       this.isGenerating = false;
       this.generationCompleted = false;
       this.counter = 0;
       this.counter2 = 0;
-      this.xg = 58;
-      this.yg = 46;
-      this.trunkLength = 200;
+      this.xg = 48;
+      this.yg = 36;
+      this.trunkLength = 60;
       this.trunkRadius = 26;
       this.lean2 = new Array(8).fill(0);
       this.pts = new Array(20000);
+      this.treeProperties = {}; // Réinitialise les propriétés de l'arbre
       this.canvas = null;
       this.ctx = null;
     },
@@ -108,34 +105,67 @@ export default {
       this.canvas = this.$refs.canvas;
       this.ctx = this.canvas.getContext("2d");
       this.resizeCanvas();
-      this.setupTree();
+      if (Object.keys(this.treeProperties).length === 0) {
+        // Si aucune propriété d'arbre n'a été sauvegardée, générer un nouvel arbre
+        this.setupTree();
+      } else {
+        // Si les propriétés existent déjà, redessiner l'arbre avec les mêmes caractéristiques
+        this.redrawTree();
+      }
     },
     resizeCanvas() {
       this.canvas.width = window.innerWidth;
       this.canvas.height = window.innerHeight;
+      
+      // Appeler la méthode qui ajuste la taille de l'arbre pour les écrans mobiles
+      this.adjustTreeSizeForMobile();
+      
       this.setupTree();
     },
 
-  setupTree() {
-  this.counter = 0;
-  this.counter2 = 0;
+    adjustTreeSizeForMobile() {
+      // Vérifie si l'écran est mobile (petit écran)
+      if (window.innerWidth <= 768) { // Ajustement pour les écrans de taille mobile
+        this.trunkLength = 120;  // Réduit la longueur du tronc
+        this.trunkRadius = 12;   // Réduit le rayon du tronc
+      } else {
+        // Réinitialise à la taille par défaut pour les grands écrans
+        this.trunkLength = 200;
+        this.trunkRadius = 26;
+      }
+    },
+
+    setupTree() {
+      this.counter = 0;
+      this.counter2 = 0;
+      
+      // Sauvegarder les propriétés de l'arbre pour les réutiliser plus tard
+      this.treeProperties = {
+        trunkSegments: this.trunkSegments,
+        trunkLength: this.trunkLength,
+        trunkRadius: this.trunkRadius,
+        lean2: [...this.lean2], // Copier l'inclinaison du tronc
+        branchLimit: this.branchLimit
+      };
   
-  // Clear canvas to keep it transparent
-  this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // Clear canvas, making it transparent
+      // Effacer le canvas avant de commencer
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // Effacer le canvas
   
-  this.ctx.strokeStyle = "rgb(10, 0, 100)";
-  this.trunkLength = 100;  // Fixed trunk length
-  this.trunkRadius = 26;   // Fixed trunk radius
-  this.trunk();
-}
-,
+      this.ctx.strokeStyle = "rgb(10, 0, 100)";
+      
+      // Utiliser les valeurs de `treeProperties` au lieu de réinitialiser la taille
+      this.trunkLength = this.treeProperties.trunkLength;  
+      this.trunkRadius = this.treeProperties.trunkRadius;   
+      this.trunk();
+    },
+    
     trunk() {
       let startingY = this.canvas.height - this.trunkLength;
       let startX = this.canvas.width / 2;
   
       for (let i = 0; i < this.trunkSegments; i++) {
         let lean = this.myRand(22);
-        this.ctx.lineWidth = this.trunkRadius + 12; // Fixed trunk radius
+        this.ctx.lineWidth = this.trunkRadius + 12; // Rayon du tronc fixe
         let currentY = startingY - (this.trunkLength / this.trunkSegments) * i;
         this.drawLine(startX + this.lean2[i], currentY, startX + lean, currentY - (this.trunkLength / this.trunkSegments));
         this.lean2[i + 1] = lean;
@@ -145,6 +175,7 @@ export default {
         this.branch(this.pts);
       }
     },
+
     branch(pts) {
       let stemCount = 2;
       if (this.counter2 < this.branchLimit) {
@@ -175,6 +206,7 @@ export default {
         }
       }
     },
+
     orgLine(x1, y1, x2, y2) {
       let sections = 8;
       let xd = x2 - x1;
@@ -196,18 +228,18 @@ export default {
       return Math.random() * val + Math.random() * -val;
     },
     cleanupCanvas() {
-      // Cleanup and remove event listeners
+      // Nettoyage et suppression des écouteurs d'événements
       window.removeEventListener("resize", this.resizeCanvas);
     },
     captureCanvas() {
       const dataURL = this.canvas.toDataURL("image/png");
       const link = document.createElement('a');
       link.href = dataURL;
-      link.download = 'tree_image.png'; // Set the download file name
-      link.click(); // Trigger the download
+      link.download = 'tree_image.png'; // Nom du fichier de téléchargement
+      link.click(); // Déclencher le téléchargement
     },
     clearCanvas() {
-      // Clear the canvas and restart tree generation
+      // Effacer le canvas et redémarrer la génération de l'arbre avec les mêmes caractéristiques
       this.setupCanvas();
     }
   },
@@ -216,6 +248,8 @@ export default {
   }
 };
 </script>
+
+
 
 
 <style scoped>
